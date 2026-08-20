@@ -1,0 +1,70 @@
+.dash-toolbar {
+  background: var(--mat-sys-surface-container-low);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &__title {
+    font-size: 1.4rem;
+  }
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__greeting {
+    margin-right: 16px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.dash-loading {
+  text-align: center;
+  padding: 64px 16px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.dash-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-panel {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  padding: 20px;
+  height: fit-content;
+
+  &__heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 8px 0 12px;
+  }
+}
+
+.dash-main {
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 16px;
+  padding: 28px;
+
+  &__heading {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  &__subheading {
+    margin: 4px 0 20px;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.9rem;
+  }
+}

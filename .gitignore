@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+out/
+
+# Secrets — never commit these
+appsettings.Development.json
+appsettings.Production.json
+*.pfx
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Angular / Ionic
+node_modules/
+www/
+.angular/
+dist/
+
+# OS
+.DS_Store
+
+# Claude Code local settings (machine-specific, not shared)
+.claude/settings.local.json

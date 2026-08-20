@@ -1,0 +1,15 @@
+@if (household()?.hasHousehold) {
+  <div class="household-toggle">
+    <mat-slide-toggle
+      [checked]="includeHousehold()"
+      (change)="includeHouseholdChange.emit($event.checked)"
+    >
+      Include household
+    </mat-slide-toggle>
+    @if (otherMemberNames().length > 0) {
+      <p class="household-toggle__hint">
+        With {{ otherMemberNames().join(', ') }}
+      </p>
+    }
+  </div>
+}

@@ -1,0 +1,34 @@
+<mat-toolbar class="dash-toolbar">
+  <span class="arcanum-display dash-toolbar__title">Arcanum Budget</span>
+  <span class="dash-toolbar__spacer"></span>
+  @if (auth.currentUser(); as user) {
+    <span class="dash-toolbar__greeting">{{ user.displayName }}</span>
+  }
+  <button mat-stroked-button (click)="logout()">Log out</button>
+</mat-toolbar>
+
+@if (loading()) {
+  <p class="dash-loading">Loading your dashboard&hellip;</p>
+} @else {
+  <div class="dash-layout">
+    <aside class="dash-panel">
+      <app-household-toggle
+        [household]="household()"
+        [includeHousehold]="includeHousehold()"
+        (includeHouseholdChange)="onIncludeHouseholdChanged($event)"
+      />
+      <h2 class="dash-panel__heading">Accounts</h2>
+      <app-account-toggle-list
+        [accounts]="visibleAccounts()"
+        [checkedIds]="checkedIds()"
+        (toggled)="onAccountToggled($event)"
+      />
+    </aside>
+
+    <section class="dash-main">
+      <h1 class="dash-main__heading">Spending by category</h1>
+      <p class="dash-main__subheading">Last 30 days</p>
+      <app-spend-pie-chart [slices]="slices()" />
+    </section>
+  </div>
+}

@@ -1,0 +1,9 @@
+.household-toggle {
+  margin-bottom: 16px;
+
+  &__hint {
+    margin: 4px 0 0 52px;
+    font-size: 0.78rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

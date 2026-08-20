@@ -1,0 +1,21 @@
+@if (accounts().length === 0) {
+  <p class="toggle-list__empty">No linked accounts yet.</p>
+} @else {
+  @for (group of groups(); track group.ownerDisplayName) {
+    <div class="toggle-list__group">
+      @if (showOwnerLabels()) {
+        <p class="toggle-list__owner">{{ group.ownerDisplayName }}</p>
+      }
+      @for (account of group.accounts; track account.accountId) {
+        <mat-checkbox
+          class="toggle-list__item"
+          [checked]="isChecked(account.accountId)"
+          (change)="toggled.emit(account.accountId)"
+        >
+          {{ account.name }}
+          <span class="toggle-list__institution">{{ account.institutionName }}</span>
+        </mat-checkbox>
+      }
+    </div>
+  }
+}

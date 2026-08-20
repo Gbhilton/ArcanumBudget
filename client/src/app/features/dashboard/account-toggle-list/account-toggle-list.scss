@@ -1,0 +1,30 @@
+.toggle-list {
+  &__empty {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.9rem;
+  }
+
+  &__group {
+    margin-bottom: 12px;
+  }
+
+  &__owner {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0 0 6px;
+  }
+
+  &__item {
+    display: block;
+    padding: 4px 0;
+  }
+
+  &__institution {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface-variant);
+    margin-left: 0;
+  }
+}

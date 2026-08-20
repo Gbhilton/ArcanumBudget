@@ -1,0 +1,8 @@
+@if (slices().length > 0) {
+  <div class="chart-wrap">
+    <canvas baseChart [data]="chartData()" [options]="chartOptions" type="pie"></canvas>
+  </div>
+  <p class="chart-total">Total: ${{ total().toFixed(2) }}</p>
+} @else {
+  <p class="chart-empty">No spending in this range for the selected accounts.</p>
+}

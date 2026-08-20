@@ -1,0 +1,81 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: mat.$violet-palette,
+        tertiary: mat.$magenta-palette,
+      ),
+      typography: Inter,
+      density: 0,
+    )
+  );
+
+  // Hand-tuned overrides on top of the generated M3 tokens so the palette reads
+  // as a deep, cool violet/indigo rather than Material's stock "dark violet".
+  // These are the same --mat-sys-* custom properties Material's own components
+  // consume, so overriding them re-themes every Material component for free.
+  --mat-sys-primary: #a684f2;
+  --mat-sys-on-primary: #241a3d;
+  --mat-sys-primary-container: #3d2a68;
+  --mat-sys-on-primary-container: #e4d9fb;
+
+  --mat-sys-surface: #130e1f;
+  --mat-sys-on-surface: #e9e4f5;
+  --mat-sys-surface-container: #1b1530;
+  --mat-sys-surface-container-low: #17122a;
+  --mat-sys-surface-container-high: #221a3a;
+  --mat-sys-surface-container-highest: #291f45;
+  --mat-sys-surface-variant: #241d3d;
+  --mat-sys-on-surface-variant: #b8aed1;
+
+  --mat-sys-outline: #46395f;
+  --mat-sys-outline-variant: #2e2549;
+
+  --mat-sys-background: #0f0a1a;
+  --mat-sys-on-background: #e9e4f5;
+
+  --arcanum-gradient: radial-gradient(
+      circle at 15% 0%,
+      rgba(166, 132, 242, 0.16),
+      transparent 45%
+    ),
+    radial-gradient(circle at 85% 20%, rgba(123, 92, 217, 0.12), transparent 40%),
+    #0f0a1a;
+  --arcanum-display-font: 'Cormorant Garamond', serif;
+}
+
+body {
+  // Dark, cool-toned theme by default — matches the violet/indigo palette above.
+  color-scheme: dark;
+
+  background: var(--arcanum-gradient);
+  background-attachment: fixed;
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  min-height: 100%;
+}
+
+// Sparingly used for page titles / wordmarks only — everything else stays in
+// the Inter body typeface so the "arcane" touch reads as an accent, not a costume.
+.arcanum-display {
+  font-family: var(--arcanum-display-font);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+* {
+  box-sizing: border-box;
+}
+/* You can add global styles to this file, and also import other style files */
