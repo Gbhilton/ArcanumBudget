@@ -58,7 +58,11 @@ builder.Services.AddScoped<IPlaidService, PlaidService>();
 builder.Services.AddScoped<ISyncService, SyncService>();
 builder.Services.AddScoped<IHouseholdService, HouseholdService>();
 builder.Services.AddScoped<IRecommendationEngine, RecommendationEngine>();
-builder.Services.AddScoped<IEmailService, ConsoleEmailService>(); // swap later for real email
+// Falls back to the console-log stub so local dev works without email credentials set up.
+if (!string.IsNullOrWhiteSpace(builder.Configuration["Smtp:Host"]))
+    builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+else
+    builder.Services.AddScoped<IEmailService, ConsoleEmailService>();
 
 // ---- CORS: allow the Ionic/Angular app (adjust origins for prod) ----
 builder.Services.AddCors(options =>
@@ -85,7 +89,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();
+
 app.UseCors("AppClient");
 app.UseAuthentication();
 app.UseAuthorization();

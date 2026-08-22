@@ -1,0 +1,143 @@
+<mat-toolbar class="dash-toolbar">
+  <button mat-icon-button routerLink="/dashboard" aria-label="Back to dashboard">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span class="arcanum-display dash-toolbar__title">Profile</span>
+  <span class="dash-toolbar__spacer"></span>
+  <button mat-stroked-button (click)="logout()">Log out</button>
+</mat-toolbar>
+
+<div class="profile-layout">
+  <section class="profile-card">
+    <h2 class="profile-card__heading">Name</h2>
+    <form [formGroup]="nameForm" (ngSubmit)="saveName()" class="profile-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Display name</mat-label>
+        <input matInput formControlName="displayName" />
+      </mat-form-field>
+      @if (nameError()) {
+        <p class="profile-form__error">{{ nameError() }}</p>
+      }
+      @if (nameSuccess()) {
+        <p class="profile-form__success">Saved.</p>
+      }
+      <button mat-flat-button color="primary" type="submit" [disabled]="nameForm.invalid || nameSubmitting()">
+        @if (nameSubmitting()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Save name
+        }
+      </button>
+    </form>
+  </section>
+
+  <section class="profile-card">
+    <h2 class="profile-card__heading">Email</h2>
+    <form [formGroup]="emailForm" (ngSubmit)="saveEmail()" class="profile-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="newEmail" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Current password</mat-label>
+        <input matInput type="password" formControlName="currentPassword" autocomplete="current-password" />
+        <mat-hint>Required to confirm this change</mat-hint>
+      </mat-form-field>
+      @if (emailError()) {
+        <p class="profile-form__error">{{ emailError() }}</p>
+      }
+      @if (emailSuccess()) {
+        <p class="profile-form__success">Email updated.</p>
+      }
+      <button mat-flat-button color="primary" type="submit" [disabled]="emailForm.invalid || emailSubmitting()">
+        @if (emailSubmitting()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Save email
+        }
+      </button>
+    </form>
+  </section>
+
+  <section class="profile-card">
+    <h2 class="profile-card__heading">Password</h2>
+    <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="profile-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Current password</mat-label>
+        <input matInput type="password" formControlName="currentPassword" autocomplete="current-password" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>New password</mat-label>
+        <input matInput type="password" formControlName="newPassword" autocomplete="new-password" />
+        <mat-hint>At least 8 characters</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Confirm new password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password" />
+      </mat-form-field>
+      @if (passwordError()) {
+        <p class="profile-form__error">{{ passwordError() }}</p>
+      }
+      @if (passwordSuccess()) {
+        <p class="profile-form__success">Password changed.</p>
+      }
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="passwordForm.invalid || passwordSubmitting()"
+      >
+        @if (passwordSubmitting()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Change password
+        }
+      </button>
+    </form>
+  </section>
+
+  <section class="profile-card">
+    <h2 class="profile-card__heading">Household</h2>
+    <p class="profile-card__hint">
+      Link accounts with someone else so your combined spending shows up on one dashboard.
+      They'll need an Arcanum Budget account already.
+    </p>
+
+    @if (household(); as h) {
+      @if (h.members.length > 0) {
+        <ul class="profile-members">
+          @for (member of h.members; track member.userId) {
+            <li class="profile-members__item">
+              <span>{{ member.displayName }} &middot; {{ member.email }}</span>
+              <mat-chip [class]="'profile-members__chip profile-members__chip--' + member.status.toLowerCase()">
+                {{ memberStatusLabel(member) }}
+              </mat-chip>
+            </li>
+          }
+        </ul>
+      }
+    }
+
+    <form [formGroup]="inviteForm" (ngSubmit)="sendInvite()" class="profile-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Their email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+      @if (inviteError()) {
+        <p class="profile-form__error">{{ inviteError() }}</p>
+      }
+      @if (inviteSuccess()) {
+        <p class="profile-form__success">
+          Invite sent &mdash; they'll need to confirm it from their own account.
+        </p>
+      }
+      <button mat-flat-button color="primary" type="submit" [disabled]="inviteForm.invalid || inviteSubmitting()">
+        @if (inviteSubmitting()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Send invite
+        }
+      </button>
+    </form>
+  </section>
+</div>

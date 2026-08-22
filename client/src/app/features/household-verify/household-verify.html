@@ -1,0 +1,24 @@
+<div class="verify-page">
+  <div class="verify-card">
+    @switch (state()) {
+      @case ('verifying') {
+        <mat-spinner diameter="32" />
+        <p class="verify-card__text">Confirming your household link&hellip;</p>
+      }
+      @case ('success') {
+        <h1 class="arcanum-display verify-card__title">You're linked</h1>
+        <p class="verify-card__text">
+          Your accounts are now part of the same household. Head back to your dashboard to see it.
+        </p>
+        <a mat-flat-button color="primary" routerLink="/dashboard">Go to dashboard</a>
+      }
+      @case ('error') {
+        <h1 class="arcanum-display verify-card__title">Link didn't work</h1>
+        <p class="verify-card__text">
+          That invite link is invalid or has expired. Ask them to send you a new one from their profile page.
+        </p>
+        <a mat-stroked-button routerLink="/dashboard">Back to dashboard</a>
+      }
+    }
+  </div>
+</div>

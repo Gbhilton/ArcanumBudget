@@ -26,4 +26,8 @@ export class HouseholdService {
   invite(email: string): Observable<{ memberId: number; status: string }> {
     return this.http.post<{ memberId: number; status: string }>(`${API_BASE_URL}/household/invite`, { email });
   }
+
+  verify(token: string): Observable<{ verified: boolean }> {
+    return this.http.post<{ verified: boolean }>(`${API_BASE_URL}/household/verify`, { token });
+  }
 }

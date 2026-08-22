@@ -1,7 +1,12 @@
-import { Component, computed, input } from '@angular/core';
-import { ChartConfiguration } from 'chart.js';
+import { Component, computed, input, output } from '@angular/core';
+import { ActiveElement, ChartConfiguration, ChartEvent } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import type { CategorySlice } from '../../../core/services/dashboard.service';
+
+export interface PieSlice {
+  label: string;
+  total: number;
+  transactionCount: number;
+}
 
 // Cool violet/indigo/teal family, ordered so adjacent pie slices stay
 // visually distinct even with several categories.
@@ -23,14 +28,16 @@ const SLICE_COLORS = [
   styleUrl: './spend-pie-chart.scss',
 })
 export class SpendPieChart {
-  readonly slices = input<CategorySlice[]>([]);
+  readonly slices = input<PieSlice[]>([]);
+  readonly clickable = input(true);
+  readonly sliceClick = output<string>();
 
   readonly total = computed(() => this.slices().reduce((sum, s) => sum + s.total, 0));
 
   readonly chartData = computed<ChartConfiguration<'pie'>['data']>(() => {
     const slices = this.slices();
     return {
-      labels: slices.map((s) => s.category),
+      labels: slices.map((s) => s.label.replace(/_/g, ' ')),
       datasets: [
         {
           data: slices.map((s) => s.total),
@@ -43,9 +50,13 @@ export class SpendPieChart {
     };
   });
 
-  readonly chartOptions: ChartConfiguration<'pie'>['options'] = {
+  readonly chartOptions = computed<ChartConfiguration<'pie'>['options']>(() => ({
     responsive: true,
     maintainAspectRatio: false,
+    onHover: (event, elements) => {
+      const target = event.native?.target as HTMLElement | undefined;
+      if (target) target.style.cursor = this.clickable() && elements.length ? 'pointer' : 'default';
+    },
     plugins: {
       legend: {
         position: 'right',
@@ -60,5 +71,14 @@ export class SpendPieChart {
         },
       },
     },
-  };
+  }));
+
+  onChartClick(event: { event?: ChartEvent; active?: object[] }): void {
+    if (!this.clickable()) return;
+    const active = event.active as ActiveElement[] | undefined;
+    const index = active?.[0]?.index;
+    if (index === undefined) return;
+    const slice = this.slices()[index];
+    if (slice) this.sliceClick.emit(slice.label);
+  }
 }

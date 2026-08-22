@@ -22,8 +22,7 @@ public class HouseholdService : IHouseholdService
         _email = email;
     }
 
-    // Grant invites his wife: creates (or reuses) a household, adds him as verified,
-    // adds her as pending, and emails her a verification link.
+    // Creates (or reuses) a household, adds as verified, adds invitee as pending, and emails a verification link.
     public async Task<HouseholdMember> InviteAsync(string invitingUserId, string inviteeEmail)
     {
         var invitee = await _db.Users.FirstOrDefaultAsync(u => u.Email == inviteeEmail)
@@ -32,7 +31,6 @@ public class HouseholdService : IHouseholdService
         if (invitee.Id == invitingUserId)
             throw new InvalidOperationException("Cannot invite yourself.");
 
-        // Does the inviter already belong to a household? Reuse it; else create one.
         var existingMembership = await _db.HouseholdMembers
             .FirstOrDefaultAsync(m => m.UserId == invitingUserId && m.Status == HouseholdMemberStatus.Verified);
 
@@ -56,7 +54,6 @@ public class HouseholdService : IHouseholdService
             });
         }
 
-        // Don't double-invite.
         var alreadyMember = await _db.HouseholdMembers
             .AnyAsync(m => m.HouseholdId == household.Id && m.UserId == invitee.Id);
         if (alreadyMember)
@@ -78,7 +75,7 @@ public class HouseholdService : IHouseholdService
         return member;
     }
 
-    // Invitee clicks the emailed link; we confirm it's really their account confirming, then mark verified.
+    // Invitee clicks the emailed link; confirm it's really their account confirming, then mark verified.
     public async Task<bool> VerifyAsync(string token, string verifyingUserId)
     {
         var member = await _db.HouseholdMembers
@@ -113,8 +110,8 @@ public class HouseholdService : IHouseholdService
 }
 
 // Minimal interface so HouseholdService doesn't care how email actually gets sent.
-// Swap in SendGrid/SMTP/etc. later — free options exist for low volume (e.g. SMTP via Gmail for dev).
 public interface IEmailService
 {
     Task SendHouseholdInviteAsync(string toEmail, string verificationToken);
+    Task SendPasswordResetAsync(string toEmail, string resetToken);
 }

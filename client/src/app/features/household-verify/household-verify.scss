@@ -1,0 +1,31 @@
+.verify-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.verify-card {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 32px;
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+
+  &__title {
+    margin: 8px 0 0;
+    font-size: 1.6rem;
+  }
+
+  &__text {
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0 0 12px;
+  }
+}

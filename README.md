@@ -92,8 +92,11 @@ endpoints before the frontend exists.
 - `RecommendationEngine`'s subscription detector only looks at 30 days of
   data — it'll get much more accurate once you have a few months of
   transaction history to spot true monthly recurrence.
-- Email sending is a console-log stub (`ConsoleEmailService`). Swap in real
-  SMTP or a provider before inviting anyone who isn't reading your server logs.
+- Email sending uses real SMTP (`SmtpEmailService`, via MailKit) once
+  `Smtp:Host` is configured in `appsettings.Development.json` — see
+  `appsettings.Development.json.example` for the Gmail App Password setup.
+  Falls back to a console-log stub (`ConsoleEmailService`) when unconfigured,
+  so local dev works without real credentials.
 - No background job yet for nightly auto-sync — right now sync is triggered
   by the initial connect and a manual "refresh" button. Add a hosted service
   or cron trigger calling `ISyncService.SyncAllForUserAsync` if you want it

@@ -12,6 +12,8 @@
       <input matInput type="password" formControlName="password" autocomplete="current-password" />
     </mat-form-field>
 
+    <a class="auth-card__forgot" routerLink="/forgot-password">Forgot password?</a>
+
     @if (error()) {
       <p class="auth-card__error">{{ error() }}</p>
     }

@@ -4,7 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -24,6 +25,7 @@ export class Login {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -41,11 +43,22 @@ export class Login {
     const { email, password } = this.form.getRawValue();
 
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigate(['/dashboard']),
-      error: () => {
-        this.error.set('Invalid email or password.');
+      next: () => {
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
+        this.router.navigateByUrl(returnUrl);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set(loginErrorMessage(err));
         this.submitting.set(false);
       },
     });
   }
+}
+
+function loginErrorMessage(err: HttpErrorResponse): string {
+  if (err.status === 401) return 'Invalid email or password.';
+  if (err.status === 0) {
+    return "Couldn't reach the server. Check your connection, or the API may be down.";
+  }
+  return 'Something went wrong logging in. Please try again.';
 }

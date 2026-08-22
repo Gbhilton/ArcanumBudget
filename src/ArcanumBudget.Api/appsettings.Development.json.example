@@ -1,0 +1,22 @@
+{
+  "_comment": "Copy this file to appsettings.Development.json (which is gitignored) and fill in real values. Better yet, use `dotnet user-secrets` instead — see README.",
+
+  "Plaid": {
+    "ClientId": "clientIdHere",
+    "Secret": "secretHere",
+    "Environment": "Sandbox"
+  },
+  "Jwt": {
+    "Key": "JWTKeyHere"
+  },
+
+  "_smtp_comment": "Optional — omit the whole Smtp section to fall back to the console-log stub (dev-only, no real emails sent). For Gmail: enable 2-Step Verification on the account, then create an App Password at https://myaccount.google.com/apppasswords — use that 16-character password here, NOT your normal Google password.",
+  "Smtp": {
+    "Host": "smtp.gmail.com",
+    "Port": "587",
+    "Username": "your-gmail-address@gmail.com",
+    "Password": "your-16-char-app-password",
+    "FromEmail": "your-gmail-address@gmail.com",
+    "FromName": "Arcanum Budget"
+  }
+}

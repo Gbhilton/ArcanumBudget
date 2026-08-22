@@ -15,11 +15,22 @@ public class ConsoleEmailService : IEmailService
 
     public Task SendHouseholdInviteAsync(string toEmail, string verificationToken)
     {
-        var baseUrl = _config["AppBaseUrl"] ?? "https://localhost:5001";
+        var baseUrl = _config["AppBaseUrl"] ?? "http://localhost:4200";
         var link = $"{baseUrl}/household/verify?token={verificationToken}";
 
         _logger.LogInformation(
             "[DEV EMAIL] Household invite for {Email}: {Link}", toEmail, link);
+
+        return Task.CompletedTask;
+    }
+
+    public Task SendPasswordResetAsync(string toEmail, string resetToken)
+    {
+        var baseUrl = _config["AppBaseUrl"] ?? "http://localhost:4200";
+        var link = $"{baseUrl}/reset-password?email={Uri.EscapeDataString(toEmail)}&token={Uri.EscapeDataString(resetToken)}";
+
+        _logger.LogInformation(
+            "[DEV EMAIL] Password reset for {Email}: {Link}", toEmail, link);
 
         return Task.CompletedTask;
     }

@@ -4,6 +4,9 @@
   @if (auth.currentUser(); as user) {
     <span class="dash-toolbar__greeting">{{ user.displayName }}</span>
   }
+  <button mat-icon-button routerLink="/profile" aria-label="Profile">
+    <mat-icon>account_circle</mat-icon>
+  </button>
   <button mat-stroked-button (click)="logout()">Log out</button>
 </mat-toolbar>
 
@@ -12,6 +15,35 @@
 } @else {
   <div class="dash-layout">
     <aside class="dash-panel">
+      <h2 class="dash-panel__heading dash-panel__heading--first">Filters</h2>
+      <div class="dash-panel__date-fields">
+        <mat-form-field appearance="outline" class="dash-panel__date-field">
+          <mat-label>Start date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            [value]="startDate()"
+            [max]="endDate()"
+            (dateChange)="onStartDateChanged($event.value)"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+          <mat-datepicker #startPicker />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="dash-panel__date-field">
+          <mat-label>End date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            [value]="endDate()"
+            [min]="startDate()"
+            [max]="today"
+            (dateChange)="onEndDateChanged($event.value)"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+          <mat-datepicker #endPicker />
+        </mat-form-field>
+      </div>
       <app-household-toggle
         [household]="household()"
         [includeHousehold]="includeHousehold()"
@@ -23,12 +55,56 @@
         [checkedIds]="checkedIds()"
         (toggled)="onAccountToggled($event)"
       />
+
+      <button
+        mat-stroked-button
+        class="dash-panel__connect"
+        [disabled]="connecting()"
+        (click)="connectBank()"
+      >
+        @if (connecting()) {
+          <mat-spinner diameter="18" />
+        } @else {
+          {{ accounts().length === 0 ? 'Connect a bank' : 'Connect another bank' }}
+        }
+      </button>
+      @if (connectError()) {
+        <p class="dash-panel__error">{{ connectError() }}</p>
+      }
     </aside>
 
     <section class="dash-main">
-      <h1 class="dash-main__heading">Spending by category</h1>
-      <p class="dash-main__subheading">Last 30 days</p>
-      <app-spend-pie-chart [slices]="slices()" />
+      @if (accounts().length === 0) {
+        <div class="dash-empty">
+          <h1 class="dash-main__heading">No accounts connected yet</h1>
+          <p class="dash-main__subheading">
+            Connect a bank to see your spending broken down by category.
+          </p>
+          <button mat-flat-button color="primary" [disabled]="connecting()" (click)="connectBank()">
+            @if (connecting()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Connect a bank
+            }
+          </button>
+        </div>
+      } @else {
+        @if (drilldownCategory(); as category) {
+          <button mat-button class="dash-main__back" (click)="backToCategories()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to categories
+          </button>
+          <h1 class="dash-main__heading">{{ category.replaceAll('_', ' ') }} by merchant</h1>
+        } @else {
+          <h1 class="dash-main__heading">Spending by category</h1>
+        }
+        <p class="dash-main__subheading">{{ rangeLabel() }}</p>
+        <app-spend-pie-chart
+          [slices]="pieSlices()"
+          [clickable]="!drilldownCategory()"
+          (sliceClick)="onCategoryClick($event)"
+        />
+      }
     </section>
   </div>
 }

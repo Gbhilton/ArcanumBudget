@@ -1,6 +1,12 @@
 @if (slices().length > 0) {
   <div class="chart-wrap">
-    <canvas baseChart [data]="chartData()" [options]="chartOptions" type="pie"></canvas>
+    <canvas
+      baseChart
+      [data]="chartData()"
+      [options]="chartOptions()"
+      type="pie"
+      (chartClick)="onChartClick($event)"
+    ></canvas>
   </div>
   <p class="chart-total">Total: ${{ total().toFixed(2) }}</p>
 } @else {

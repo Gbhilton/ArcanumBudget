@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { API_BASE_URL } from '../config';
 
 export interface CurrentUser {
@@ -47,6 +47,40 @@ export class AuthService {
     localStorage.removeItem(`${STORAGE_KEY}.token`);
     localStorage.removeItem(`${STORAGE_KEY}.user`);
     this.userSignal.set(null);
+  }
+
+  updateProfile(displayName: string): Observable<CurrentUser> {
+    return this.http
+      .put<AuthResponse>(`${API_BASE_URL}/auth/profile`, { displayName })
+      .pipe(
+        tap((res) => this.persistSession(res)),
+        map((res) => ({ userId: res.userId, email: res.email, displayName: res.displayName })),
+      );
+  }
+
+  updateEmail(newEmail: string, currentPassword: string): Observable<CurrentUser> {
+    return this.http
+      .put<AuthResponse>(`${API_BASE_URL}/auth/email`, { newEmail, currentPassword })
+      .pipe(
+        tap((res) => this.persistSession(res)),
+        map((res) => ({ userId: res.userId, email: res.email, displayName: res.displayName })),
+      );
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.http
+      .put<{ changed: boolean }>(`${API_BASE_URL}/auth/password`, { currentPassword, newPassword })
+      .pipe(map(() => undefined));
+  }
+
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${API_BASE_URL}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(email: string, token: string, newPassword: string): Observable<void> {
+    return this.http
+      .post<{ reset: boolean }>(`${API_BASE_URL}/auth/reset-password`, { email, token, newPassword })
+      .pipe(map(() => undefined));
   }
 
   private persistSession(res: AuthResponse): void {
